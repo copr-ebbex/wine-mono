@@ -3,8 +3,8 @@
 %{?mingw_package_header}
 
 Name:           wine-mono
-Version:        9.0.0
-Release:        2%{?dist}
+Version:        9.2.0
+Release:        1%{?dist}
 Summary:        Mono library required for Wine
 
 License:        GPL-2.0-or-later AND LGPL-2.1-only AND MIT AND BSD-4-Clause-UC AND MS-PL AND MPL-1.1
@@ -120,6 +120,9 @@ cp mono-basic/LICENSE mono-basic-LICENSE
 %{_datadir}/wine/mono/wine-mono-%{version}/
 
 %changelog
+* Tue Aug 13 2024 Michael Cronenworth <mike@cchtml.com> - 9.2.0-1
+- version upgrade
+
 * Sat Jul 20 2024 Fedora Release Engineering <releng@fedoraproject.org> - 9.0.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_41_Mass_Rebuild
 
