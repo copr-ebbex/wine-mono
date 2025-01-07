@@ -68,7 +68,7 @@ Windows Mono library required for Wine.
 %{?mingw_debug_package}
 
 %prep
-%autosetup -q
+%autosetup
 
 # Fix all Python shebangs
 %py3_shebang_fix .
