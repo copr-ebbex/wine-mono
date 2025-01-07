@@ -1,0 +1,58 @@
+From f2d4798eabe3a888f8b8bbfd27c152a396b38aaa Mon Sep 17 00:00:00 2001
+From: Zephyr Lykos <git@mochaa.ws>
+Date: Sun, 5 Jan 2025 00:36:14 +0800
+Subject: [PATCH] build: mark all PE files as wine builtins
+
+This allows libmono to load extra libraries (notably win-iconv) from
+system_dllpath.
+
+For example, Fedora's wine-mono is built against a shared win-iconv
+installed in system_dllpath, but wine will not search there unless it's
+explicitly instructed to do so since wine commit bfbccf1a (ntdll: Prevent
+loading Wine system dependencies in place of identically named application
+DLLs.).
+
+https://gitlab.winehq.org/wine/wine/-/merge_requests/7077
+Wine-Bug: https://bugs.winehq.org/show_bug.cgi?id=54573
+---
+ GNUmakefile                | 6 +++---
+ tools/mark-wine-builtin.sh | 3 +++
+ 2 files changed, 6 insertions(+), 3 deletions(-)
+ create mode 100755 tools/mark-wine-builtin.sh
+
+diff --git a/GNUmakefile b/GNUmakefile
+index e3419fdb..28809e58 100644
+--- a/GNUmakefile
++++ b/GNUmakefile
+@@ -101,16 +101,16 @@ define MINGW_TEMPLATE =
+ 
+ ifeq (1,$(ENABLE_DEBUG_SYMBOLS))
+   ifeq (1,$(PREFER_DWARF_SYMBOLS))
+-INSTALL_PE_$(1)=do_install () { $$(MINGW_ENV) $$(MINGW_$(1))-objcopy --only-keep-debug "$$$$1" "$$$$(printf %s "$$$$2"|sed -e 's/\....$$$$/.dbg/')"; $$(MINGW_ENV) $$(MINGW_$(1))-objcopy --strip-all "$$$$1" "$$$$2"; $$(MINGW_ENV) $$(MINGW_$(1))-objcopy --add-gnu-debuglink="$$$$(printf %s "$$$$2"|sed -e 's/\....$$$$/.dbg/')" "$$$$2"; }; do_install
++INSTALL_PE_$(1)=do_install () { $$(MINGW_ENV) $$(MINGW_$(1))-objcopy --only-keep-debug "$$$$1" "$$$$(printf %s "$$$$2"|sed -e 's/\....$$$$/.dbg/')"; $$(MINGW_ENV) $$(MINGW_$(1))-objcopy --strip-all "$$$$1" "$$$$2"; $$(MINGW_ENV) $$(MINGW_$(1))-objcopy --add-gnu-debuglink="$$$$(printf %s "$$$$2"|sed -e 's/\....$$$$/.dbg/')" "$$$$2"; tools/mark-wine-builtin.sh "$$$$2"; }; do_install
+ PDB_CFLAGS_$(1)=-gdwarf-4 -g
+ PDB_LDFLAGS_$(1)=
+   else
+-INSTALL_PE_$(1)=do_install () { cp "$$$$(printf %s "$$$$1"|sed -e 's/\....$$$$/.pdb/')" "$$$$(printf %s "$$$$2"|sed -e 's/\....$$$$/.pdb/')"; cp "$$$$1" "$$$$2"; $$(MINGW_ENV) $$(MINGW_$(1))-strip "$$$$2"; }; do_install
++INSTALL_PE_$(1)=do_install () { cp "$$$$(printf %s "$$$$1"|sed -e 's/\....$$$$/.pdb/')" "$$$$(printf %s "$$$$2"|sed -e 's/\....$$$$/.pdb/')"; cp "$$$$1" "$$$$2"; $$(MINGW_ENV) $$(MINGW_$(1))-strip "$$$$2"; tools/mark-wine-builtin.sh "$$$$2"; }; do_install
+ PDB_CFLAGS_$(1)=-gcodeview -g
+ PDB_LDFLAGS_$(1)=-Wl,-pdb=
+   endif
+ else
+-INSTALL_PE_$(1)=do_install () { cp "$$$$1" "$$$$2"; $$(MINGW_ENV) $$(MINGW_$(1))-strip "$$$$2"; }; do_install
++INSTALL_PE_$(1)=do_install () { cp "$$$$1" "$$$$2"; $$(MINGW_ENV) $$(MINGW_$(1))-strip "$$$$2"; tools/mark-wine-builtin.sh "$$$$2"; }; do_install
+ endif
+ 
+ # installinf.exe
+diff --git a/tools/mark-wine-builtin.sh b/tools/mark-wine-builtin.sh
+new file mode 100755
+index 00000000..5846221b
+--- /dev/null
++++ b/tools/mark-wine-builtin.sh
+@@ -0,0 +1,3 @@
++#!/bin/sh
++
++printf 'Wine builtin DLL\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0' | dd if=/dev/stdin of="$1" bs=1 seek=64 count=32 conv=notrunc
+-- 
+GitLab
+
