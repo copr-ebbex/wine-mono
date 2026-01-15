@@ -4,7 +4,7 @@
 
 Name:           wine-mono
 Version:        10.3.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Mono library required for Wine
 
 License:        GPL-2.0-or-later AND LGPL-2.1-only AND MIT AND BSD-4-Clause-UC AND MS-PL AND MPL-1.1
@@ -58,7 +58,7 @@ BuildRequires:  dos2unix
 
 Requires: wine-filesystem
 
-# Bundles FAudio, libtheorafile, libmojoshader, SDL2, SDL2_image
+# Bundles FAudio, SDL3
 
 %description
 Windows Mono library required for Wine.
