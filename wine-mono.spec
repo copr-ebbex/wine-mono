@@ -3,8 +3,8 @@
 %{?mingw_package_header}
 
 Name:           wine-mono
-Version:        10.3.0
-Release:        2%{?dist}
+Version:        10.4.1
+Release:        1%{?dist}
 Summary:        Mono library required for Wine
 
 License:        GPL-2.0-or-later AND LGPL-2.1-only AND MIT AND BSD-4-Clause-UC AND MS-PL AND MPL-1.1
@@ -12,7 +12,6 @@ URL:            http://wiki.winehq.org/Mono
 # https://github.com/madewokherd/wine-mono
 Source0:        https://dl.winehq.org/wine/wine-mono/%{version}/wine-mono-%{version}-src.tar.xz
 Patch0:         wine-mono-7.3.0-iconv.patch
-Patch1:         wine-mono-configure-c99.patch
 
 # see git://github.com/madewokherd/wine-mono
 
@@ -104,6 +103,9 @@ cp -rp image/* \
 %{_datadir}/wine/mono/wine-mono-%{version}/
 
 %changelog
+* Wed Jan 14 2026 Michael Cronenworth <mike@cchtml.com> - 10.4.1-1
+- version upgrade
+
 * Sun Nov 02 2025 Michael Cronenworth <mike@cchtml.com> - 10.3.0-1
 - version upgrade
 
