@@ -3,8 +3,8 @@
 %{?mingw_package_header}
 
 Name:           wine-mono
-Version:        10.4.1
-Release:        2.1%{?dist}
+Version:        11.3.0
+Release:        1.1%{?dist}
 Summary:        Mono library required for Wine
 
 License:        GPL-2.0-or-later AND LGPL-2.1-only AND MIT AND BSD-4-Clause-UC AND MS-PL AND MPL-1.1
@@ -47,6 +47,8 @@ BuildRequires:  pkgconfig
 BuildRequires:  gettext
 BuildRequires:  libgdiplus
 BuildRequires:  wine-core
+# widl generates PresentationNative's naturallanguage.h (since 11.x)
+BuildRequires:  /usr/bin/widl
 BuildRequires:  /usr/bin/python
 BuildRequires:  python3-setuptools
 BuildRequires:  python3-devel
@@ -103,6 +105,9 @@ cp -rp image/* \
 %{_datadir}/wine/mono/wine-mono-%{version}/
 
 %changelog
+* Mon Oct 05 2026 Erik Berg <fedora@slipsprogrammor.no> - 11.3.0-1.1
+- Update to 11.3.0, the version wine 11.19 expects
+
 * Sat Jan 17 2026 Fedora Release Engineering <releng@fedoraproject.org> - 10.4.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_44_Mass_Rebuild
 
